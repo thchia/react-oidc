@@ -17,7 +17,7 @@
     "openid"
   ],
   "author": "Thomas Chia",
-  "repository": "github/thchia/react-oidc",
+  "repository": "github:thchia/react-oidc",
   "license": "MIT",
   "peerDependencies": {
     "@types/react": "^16.4.7",
