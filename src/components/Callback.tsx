@@ -1,17 +1,17 @@
 import * as React from 'react'
-import { User, UserManager } from 'oidc-client'
+import { User, UserManager, UserManagerSettings } from 'oidc-client'
 
 export interface ICallbackProps {
   onSuccess?: (user: User) => void
   onError?: (err: any) => void
-  userManagerInstance: UserManager
+  userManagerConfig: UserManagerSettings
 }
 class Callback extends React.Component<ICallbackProps> {
   public componentDidMount() {
-    const { onSuccess, onError, userManagerInstance } = this.props
-    if (userManagerInstance) {
-      userManagerInstance
-        .signinRedirectCallback()
+    const { onSuccess, onError, userManagerConfig } = this.props
+    if (userManagerConfig) {
+      const um = new UserManager(userManagerConfig)
+      um.signinRedirectCallback()
         .then(user => {
           if (onSuccess) {
             onSuccess(user)

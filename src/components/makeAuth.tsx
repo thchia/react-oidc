@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { User, UserManager } from 'oidc-client'
+import { User, UserManager, UserManagerSettings } from 'oidc-client'
 
 import RedirectToAuth from './RedirectToAuth'
 
@@ -24,10 +24,10 @@ export interface IAuthenticatorState {
 }
 export interface IMakeAuthenticatorParams {
   placeholderComponent?: React.ReactNode
-  userManagerInstance: UserManager
+  userManagerConfig: UserManagerSettings
 }
 function makeAuthenticator({
-  userManagerInstance,
+  userManagerConfig,
   placeholderComponent
 }: IMakeAuthenticatorParams) {
   return (WrappedComponent: React.ReactNode) => {
@@ -38,11 +38,12 @@ function makeAuthenticator({
       public userManager: UserManager
       constructor(props: {}) {
         super(props)
-        this.userManager = userManagerInstance
+        const um = new UserManager(userManagerConfig)
+        this.userManager = um
         this.state = {
           context: {
             user: null,
-            userManager: userManagerInstance
+            userManager: um
           },
           isFetchingUser: true
         }
@@ -73,7 +74,7 @@ function makeAuthenticator({
 
       public render() {
         if (this.state.isFetchingUser) {
-          return placeholderComponent || <div>Fetching...</div>
+          return placeholderComponent || null
         }
         return this.isValid() ? (
           <Provider value={this.state.context}>{WrappedComponent}</Provider>
