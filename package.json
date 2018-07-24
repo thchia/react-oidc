@@ -2,8 +2,11 @@
   "name": "react-oidc",
   "version": "0.0.1",
   "description": "Wrapper for the OIDC JavaScript client, to be used in React projects.",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
+    "build": "rm -rf ./lib && tsc",
+    "prepare": "yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -14,5 +17,22 @@
     "openid"
   ],
   "author": "Thomas Chia",
-  "license": "MIT"
+  "repository": "github/thchia/react-oidc",
+  "license": "MIT",
+  "peerDependencies": {
+    "@types/react": "^16.4.7",
+    "@types/react-dom": "^16.0.6",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.4.7",
+    "@types/react-dom": "^16.0.6",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "dependencies": {
+    "oidc-client": "^1.5.2",
+    "typescript": "^2.9.2"
+  }
 }
