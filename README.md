@@ -2,9 +2,11 @@
 
 Wrapper for [oidc-client-js](https://github.com/IdentityModel/oidc-client-js), to be used in React apps.
 
+**This is an alpha version**
+
 ## Quick start
 
-> You should read the slow start too
+> You should read the [slow start](https://github.com/thchia/react-oidc#slow-start) and [Routing Considerations](https://github.com/thchia/react-oidc#routing-considerations) too
 
 ```bash
 yarn add react-oidc
