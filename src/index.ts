@@ -1,4 +1,4 @@
-import { Consumer, makeAuthenticator } from './components/makeAuth'
-import Callback from './components/Callback'
+import { Consumer, makeAuthenticator } from './makeAuth'
+import Callback from './Callback'
 
 export { Callback, Consumer, makeAuthenticator }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { User, UserManager, UserManagerSettings } from 'oidc-client'
 
-import RedirectToAuth from './RedirectToAuth'
+import RedirectToAuth from '../RedirectToAuth'
 
 export interface IAuthenticatorContext {
   user: User | null
@@ -25,8 +25,10 @@ export interface IAuthenticatorState {
 export interface IMakeAuthenticatorParams {
   placeholderComponent?: React.ReactNode
   userManagerConfig: UserManagerSettings
+  injectedUM?: typeof UserManager
 }
 function makeAuthenticator({
+  injectedUM,
   userManagerConfig,
   placeholderComponent
 }: IMakeAuthenticatorParams) {
@@ -38,7 +40,8 @@ function makeAuthenticator({
       public userManager: UserManager
       constructor(props: {}) {
         super(props)
-        const um = new UserManager(userManagerConfig)
+        const UMClass = injectedUM || UserManager
+        const um = new UMClass(userManagerConfig)
         this.userManager = um
         this.state = {
           context: {

@@ -5,12 +5,19 @@ export interface ICallbackProps {
   onSuccess?: (user: User) => void
   onError?: (err: any) => void
   userManagerConfig: UserManagerSettings
+  UserManager?: typeof UserManager
 }
 class Callback extends React.Component<ICallbackProps> {
   public componentDidMount() {
-    const { onSuccess, onError, userManagerConfig } = this.props
+    const {
+      onSuccess,
+      onError,
+      UserManager: userManager,
+      userManagerConfig
+    } = this.props
     if (userManagerConfig) {
-      const um = new UserManager(userManagerConfig)
+      const UserManagerClass = userManager || UserManager
+      const um = new UserManagerClass(userManagerConfig)
       um.signinRedirectCallback()
         .then(user => {
           if (onSuccess) {
