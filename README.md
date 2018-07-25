@@ -52,30 +52,35 @@ There are 2 main parts to this library:
 
 `makeAuthenticator(params)(<ProtectedApp />)`
 
-| param                  | type      | required | default value |
-| ---------------------- | --------- | -------- | ------------- |
-| `userManagerConfig`    | object    | Yes      | `undefined`   |
-| `placeholderComponent` | Component | No       | `null`        |
+| Param                  | Type      | Required | Default Value | Description                                                      |
+| ---------------------- | --------- | -------- | ------------- | ---------------------------------------------------------------- |
+| `userManagerConfig`    | object    | Yes      | `undefined`   | Config object to pass to `UserManager`                           |
+| `placeholderComponent` | Component | No       | `null`        | Optional component to render while auth state is being retrieved |
 
-This is a higher-order function that accepts a config object for the `UserManager` class provided by `oidc-client`, and optionally a placeholder component to render when user auth state is being retrieved. It returns a function that accepts a React component. This component should contain all components that you want to be protected by your authentication. Ultimately you will get back a component that either renders the component you passed it (if the user is authenticated), or redirects to the OIDC login screen as defined in the config.
+This is a higher-order function that accepts a config object for the `UserManager` class provided by `oidc-client`, and optionally a placeholder component to render when user auth state is being retrieved. It returns a function that accepts a React component. This component should contain all components that you want to be protected by your authentication. Ultimately you will get back a component that either renders the component you passed it (if the user is authenticated), or redirects to the OIDC login screen as defined by the Identity Provider.
 
 The lifecycle of this component is as follows:
 
 1.  The component is constructed with a fetching flag set to true.
 
-2.  On mount, the `.getUser()` method from `UserManager` is called. If the user is already authenticated, it will set the fetching to false and render the component you passed it.
+2.  On mount, the `.getUser()` method from `UserManager` is called. If the user is already authenticated, it will set the fetching flag to false and render the component you passed it.
 
-3.  If the user is not authenticated or their token has expired, the user will be redirected to the login URL (set by the Identity Provider).
+3.  If the user is not authenticated or their token has expired, the user will be redirected to the login URL (defined by the Identity Provider) and the fetching flag will be set to false.
 
 4.  Upon successful authentication with the Identity Provider, the user will be redirected to the `redirect_uri`. You should render the `Callback` component at this location.
 
+#### Note on the fetching flag
+
+> The fetching flag is set to `true` initially because of the asynchronous nature of `.getUser()`. There is a need to ensure that we do not redirect to the login page whilst `getUser` is resolving. Without some way of knowing when the user auth state query is complete, we would end up **always** redirecting to the login page.
+
 ### `<Callback />`
 
-| prop                | type     | required | default value |
-| ------------------- | -------- | -------- | ------------- |
-| `userManagerConfig` | object   | Yes      | `undefined`   |
-| `onError`           | function | No       | `undefined`   |
-| `onSuccess`         | function | No       | `undefined`   |
+| Prop                | Type      | Required | Default Value | Description                                                                                     |
+| ------------------- | --------- | -------- | ------------- | ----------------------------------------------------------------------------------------------- |
+| `userManagerConfig` | object    | Yes      | `undefined`   | Config object to pass to `UserManager`                                                          |
+| `children`          | Component | No       | null          | Optional component to render at the redirect page                                               |
+| `onError`           | function  | No       | `undefined`   | Optional callback if there is an error from the Promise returned by `.signinRedirectCallback()` |
+| `onSuccess`         | function  | No       | `undefined`   | Optional callback when the Promise from `.signinRedirectCallback()` resolves                    |
 
 The `Callback` component will call the `.signinRedirectCallback()` method from `UserManager` and if successful, call the `onSuccess` prop. On error it will call the `onError` prop.
 
