@@ -1,4 +1,4 @@
-import { Consumer, makeAuthenticator } from './makeAuth'
+import { Consumer as UserData, makeAuthenticator } from './makeAuth'
 import Callback from './Callback'
 
-export { Callback, Consumer, makeAuthenticator }
+export { Callback, UserData, makeAuthenticator }

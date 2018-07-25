@@ -84,6 +84,22 @@ The lifecycle of this component is as follows:
 
 The `Callback` component will call the `.signinRedirectCallback()` method from `UserManager` and if successful, call the `onSuccess` prop. On error it will call the `onError` prop.
 
+### `<UserData />`
+
+This component exposes the data of the authenticated user. If you are familiar with React's Context API (the official v16.3.x one), this component is just a `Consumer`.
+
+```jsx
+<UserData>{context => <p>{context.user.id_token}</p>}</UserData>
+```
+
+Render prop function
+
+| Argument (key of `context`) | Type          | Description                                  |
+| --------------------------- | ------------- | -------------------------------------------- |
+| `signOut`                   | function      | Call this to sign the current user out       |
+| `user`                      | `User`        | This is the `User` object from `oidc-client` |
+| `userManager`               | `UserManager` | `UserManager` instance from `oidc-client`    |
+
 ## Routing considerations
 
 This library is deliberately unopinionated about routing, however there are restrictions from the `oidc-client` library that should be considered.

@@ -4,10 +4,12 @@ import { User, UserManager, UserManagerSettings } from 'oidc-client'
 import RedirectToAuth from '../RedirectToAuth'
 
 export interface IAuthenticatorContext {
+  signOut: () => void
   user: User | null
   userManager: UserManager | null
 }
 const DEFAULT_CONTEXT: IAuthenticatorContext = {
+  signOut: () => {},
   user: null,
   userManager: null
 }
@@ -18,6 +20,7 @@ const { Consumer, Provider } = React.createContext<IAuthenticatorContext>(
 export interface IAuthenticatorState {
   isFetchingUser: boolean
   context: {
+    signOut: () => void
     user: User | null
     userManager: UserManager
   }
@@ -45,6 +48,7 @@ function makeAuthenticator({
         this.userManager = um
         this.state = {
           context: {
+            signOut: this.signOut,
             user: null,
             userManager: um
           },
@@ -53,6 +57,10 @@ function makeAuthenticator({
       }
 
       public componentDidMount() {
+        this.getUser()
+      }
+
+      public getUser = () => {
         this.userManager
           .getUser()
           .then(user => this.storeUser(user))
@@ -66,8 +74,16 @@ function makeAuthenticator({
             isFetchingUser: false
           }))
         } else {
-          this.setState({ isFetchingUser: false })
+          this.setState(({ context }) => ({
+            context: { ...context, user: null },
+            isFetchingUser: false
+          }))
         }
+      }
+
+      public signOut = () => {
+        this.userManager.removeUser()
+        this.getUser()
       }
 
       public isValid = () => {

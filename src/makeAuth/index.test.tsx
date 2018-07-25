@@ -1,12 +1,15 @@
 import * as React from 'react'
-import { render } from 'react-testing-library'
+import { fireEvent, render, waitForElement } from 'react-testing-library'
 
-import { makeAuthenticator } from './'
+import { Consumer, makeAuthenticator } from './'
 import MockUserManager from '../utils/userManager'
 
 describe('makeAuthenticator', () => {
   const Child = () => <div>Make Auth Child</div>
   const Placeholder = () => <div>Placeholder</div>
+  const Logout = (props: { signOut: () => void }) => (
+    <button onClick={props.signOut}>Logout</button>
+  )
   const successfulGetUser = () => new Promise(res => res({ expired: false }))
   const expiredGetUser = () => new Promise(res => res({ expired: true }))
   const failedGetUser = () => new Promise((res, rej) => rej('Test Error'))
@@ -76,5 +79,23 @@ describe('makeAuthenticator', () => {
     await successfulGetUser
     getByText('Make Auth Child')
     expect(queryByText('Placeholder')).toBeNull()
+  })
+
+  it('signs out', async () => {
+    const userManagerConfig = {
+      getUserFunction: successfulGetUser
+    } as any
+
+    const WithAuth = makeAuthenticator({
+      injectedUM: MockUserManager,
+      userManagerConfig
+    })(<Consumer>{({ signOut }) => <Logout signOut={signOut} />}</Consumer>)
+    const { getByText, queryByText } = render(<WithAuth />)
+
+    await successfulGetUser
+    const button = getByText('Logout')
+
+    fireEvent.click(button)
+    waitForElement(() => expect(queryByText('Logout')).toBeNull())
   })
 })

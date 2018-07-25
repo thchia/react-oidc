@@ -19,6 +19,9 @@ class UserManager {
   getUser() {
     return this.getUserFunction() || new Promise(res => res())
   }
+  removeUser() {
+    this.getUser = () => new Promise(res => res(null))
+  }
   signinRedirect(): void {
     return this.signinRedirectFunction
       ? this.signinRedirectFunction()
