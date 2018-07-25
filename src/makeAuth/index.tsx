@@ -26,14 +26,12 @@ export interface IAuthenticatorState {
   }
 }
 export interface IMakeAuthenticatorParams {
-  onUserLoaded?: (user: User) => void
   placeholderComponent?: React.ReactNode
   userManager?: UserManager
 }
 function makeAuthenticator({
   userManager,
-  placeholderComponent,
-  ...events
+  placeholderComponent
 }: IMakeAuthenticatorParams) {
   return (WrappedComponent: React.ReactNode) => {
     return class Authenticator extends React.Component<
