@@ -3,6 +3,7 @@ import { render } from 'react-testing-library'
 
 import Callback from './'
 import MockUserManager from '../utils/userManager'
+import makeUserManager from '../makeUserManager'
 
 const USER_MANAGER_CONFIG = {} as any
 
@@ -13,11 +14,13 @@ describe('Callback component', () => {
 
     render(
       <Callback
-        userManagerConfig={{
-          ...USER_MANAGER_CONFIG,
-          signinRedirectCallback: signinPromise
-        }}
-        UserManager={MockUserManager}
+        userManager={makeUserManager(
+          {
+            ...USER_MANAGER_CONFIG,
+            signinRedirectCallback: signinPromise
+          },
+          MockUserManager
+        )}
         onSuccess={onSuccess}
       >
         <div />
@@ -34,11 +37,13 @@ describe('Callback component', () => {
 
     render(
       <Callback
-        userManagerConfig={{
-          ...USER_MANAGER_CONFIG,
-          signinRedirectCallback: signinPromise
-        }}
-        UserManager={MockUserManager}
+        userManager={makeUserManager(
+          {
+            ...USER_MANAGER_CONFIG,
+            signinRedirectCallback: signinPromise
+          },
+          MockUserManager
+        )}
         onError={onError}
       >
         <div />
@@ -55,8 +60,7 @@ describe('Callback component', () => {
   it('renders children', () => {
     const { getByText } = render(
       <Callback
-        userManagerConfig={USER_MANAGER_CONFIG}
-        UserManager={MockUserManager}
+        userManager={makeUserManager(USER_MANAGER_CONFIG, MockUserManager)}
       >
         <div>Test Child</div>
       </Callback>

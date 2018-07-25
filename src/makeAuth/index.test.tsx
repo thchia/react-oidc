@@ -2,6 +2,7 @@ import * as React from 'react'
 import { fireEvent, render, waitForElement } from 'react-testing-library'
 
 import { Consumer, makeAuthenticator } from './'
+import makeUserManager from '../makeUserManager'
 import MockUserManager from '../utils/userManager'
 
 describe('makeAuthenticator', () => {
@@ -20,8 +21,7 @@ describe('makeAuthenticator', () => {
     } as any
 
     const WithAuth = makeAuthenticator({
-      injectedUM: MockUserManager,
-      userManagerConfig
+      userManager: makeUserManager(userManagerConfig, MockUserManager)
     })(<Child />)
     const { getByText } = render(<WithAuth />)
 
@@ -35,9 +35,8 @@ describe('makeAuthenticator', () => {
     } as any
 
     const WithAuth = makeAuthenticator({
-      injectedUM: MockUserManager,
-      placeholderComponent: <Placeholder />,
-      userManagerConfig
+      userManager: makeUserManager(userManagerConfig, MockUserManager),
+      placeholderComponent: <Placeholder />
     })(<Child />)
     const { queryByText } = render(<WithAuth />)
 
@@ -52,9 +51,8 @@ describe('makeAuthenticator', () => {
     } as any
 
     const WithAuth = makeAuthenticator({
-      injectedUM: MockUserManager,
-      placeholderComponent: <Placeholder />,
-      userManagerConfig
+      userManager: makeUserManager(userManagerConfig, MockUserManager),
+      placeholderComponent: <Placeholder />
     })(<Child />)
     const { queryByText } = render(<WithAuth />)
 
@@ -69,9 +67,8 @@ describe('makeAuthenticator', () => {
     } as any
 
     const WithAuth = makeAuthenticator({
-      injectedUM: MockUserManager,
-      placeholderComponent: <Placeholder />,
-      userManagerConfig
+      userManager: makeUserManager(userManagerConfig, MockUserManager),
+      placeholderComponent: <Placeholder />
     })(<Child />)
     const { getByText, queryByText } = render(<WithAuth />)
 
@@ -87,8 +84,7 @@ describe('makeAuthenticator', () => {
     } as any
 
     const WithAuth = makeAuthenticator({
-      injectedUM: MockUserManager,
-      userManagerConfig
+      userManager: makeUserManager(userManagerConfig, MockUserManager)
     })(<Consumer>{({ signOut }) => <Logout signOut={signOut} />}</Consumer>)
     const { getByText, queryByText } = render(<WithAuth />)
 

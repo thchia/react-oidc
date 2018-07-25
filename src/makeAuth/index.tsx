@@ -26,14 +26,14 @@ export interface IAuthenticatorState {
   }
 }
 export interface IMakeAuthenticatorParams {
+  onUserLoaded?: (user: User) => void
   placeholderComponent?: React.ReactNode
-  userManagerConfig: UserManagerSettings
-  injectedUM?: typeof UserManager
+  userManager?: UserManager
 }
 function makeAuthenticator({
-  injectedUM,
-  userManagerConfig,
-  placeholderComponent
+  userManager,
+  placeholderComponent,
+  ...events
 }: IMakeAuthenticatorParams) {
   return (WrappedComponent: React.ReactNode) => {
     return class Authenticator extends React.Component<
@@ -43,8 +43,7 @@ function makeAuthenticator({
       public userManager: UserManager
       constructor(props: {}) {
         super(props)
-        const UMClass = injectedUM || UserManager
-        const um = new UMClass(userManagerConfig)
+        const um = userManager
         this.userManager = um
         this.state = {
           context: {
