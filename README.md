@@ -53,9 +53,7 @@ There are 3 main parts to this library:
 - `makeAuthenticator` function;
 - `Callback` component
 
-### `makeUserManager`
-
-`makeUserManager(config)`
+### `makeUserManager(config)`
 
 | Param    | Type                           | Required | Default Value | Description                            |
 | -------- | ------------------------------ | -------- | ------------- | -------------------------------------- |
@@ -63,9 +61,7 @@ There are 3 main parts to this library:
 
 Helper utility to create a `UserManager` instance.
 
-### `makeAuthenticator`
-
-`makeAuthenticator(params)(<ProtectedApp />)`
+### `makeAuthenticator(params)(<ProtectedApp />)`
 
 | Param                  | Type          | Required | Default Value | Description                                                      |
 | ---------------------- | ------------- | -------- | ------------- | ---------------------------------------------------------------- |
