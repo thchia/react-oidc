@@ -1,16 +1,33 @@
 import { UserManagerSettings } from 'oidc-client'
 
 export interface IMockUserManagerOptions extends UserManagerSettings {
-  signinRedirectCallback: Promise<any>
+  getUserFunction: () => Promise<any>
+  signinRedirectCallback: () => Promise<any>
+  signinRedirectFunction: () => void
 }
 class UserManager {
-  signinRedirectCallbackFunction: Promise<any>
+  getUserFunction: () => Promise<any>
+  signinRedirectCallbackFunction: () => Promise<any>
+  signinRedirectFunction: () => void
+
   constructor(args: IMockUserManagerOptions) {
-    this.signinRedirectCallbackFunction =
-      args.signinRedirectCallback || new Promise(res => res())
+    this.getUserFunction = args.getUserFunction
+    this.signinRedirectFunction = args.signinRedirectFunction
+    this.signinRedirectCallbackFunction = args.signinRedirectCallback
+  }
+
+  getUser() {
+    return this.getUserFunction() || new Promise(res => res())
+  }
+  signinRedirect(): void {
+    return this.signinRedirectFunction
+      ? this.signinRedirectFunction()
+      : undefined
   }
   signinRedirectCallback() {
     return this.signinRedirectCallbackFunction
+      ? this.signinRedirectCallbackFunction()
+      : new Promise(res => res())
   }
 }
 

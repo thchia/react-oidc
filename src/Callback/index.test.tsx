@@ -8,7 +8,7 @@ const USER_MANAGER_CONFIG = {} as any
 
 describe('Callback component', () => {
   it('calls onSuccess', async () => {
-    const signinPromise = new Promise(res => res('mockUser'))
+    const signinPromise = () => new Promise(res => res('mockUser'))
     const onSuccess = jest.fn()
 
     render(
@@ -27,8 +27,9 @@ describe('Callback component', () => {
     await signinPromise
     expect(onSuccess).toHaveBeenCalledWith('mockUser')
   })
+
   it('calls on Error', async () => {
-    const signinPromise = new Promise((res, rej) => rej('Test Error'))
+    const signinPromise = () => new Promise((res, rej) => rej('Test Error'))
     const onError = jest.fn()
 
     render(
@@ -50,6 +51,7 @@ describe('Callback component', () => {
       expect(onError).toHaveBeenCalledWith('Test Error')
     }
   })
+
   it('renders children', () => {
     const { getByText } = render(
       <Callback
