@@ -3,5 +3,3 @@ node_js:
   - "node"
 script:
   - yarn test
-# after_success:
-#   - yarn build
