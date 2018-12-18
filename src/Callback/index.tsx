@@ -24,7 +24,7 @@ class Callback extends React.Component<ICallbackProps> {
       })
   }
   public render() {
-    return this.props.children
+    return this.props.children || null
   }
 }
 

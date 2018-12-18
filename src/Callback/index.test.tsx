@@ -68,4 +68,12 @@ describe('Callback component', () => {
 
     getByText('Test Child')
   })
+
+  it('works without children', () => {
+    render(
+      <Callback
+        userManager={makeUserManager(USER_MANAGER_CONFIG, MockUserManager)}
+      />
+    )
+  })
 })
