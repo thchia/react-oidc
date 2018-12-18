@@ -1,6 +1,6 @@
 {
   "name": "react-oidc",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Wrapper for the OIDC JavaScript client, to be used in React projects.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
