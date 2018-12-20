@@ -1,7 +1,7 @@
 import { UserManager, UserManagerSettings } from 'oidc-client'
 
 function makeUserManager(
-  config: UserManagerSettings,
+  config: UserManagerSettings & { domain?: string; audience?: string },
   umClass?: any
 ): UserManager {
   const UMClass = umClass || UserManager
