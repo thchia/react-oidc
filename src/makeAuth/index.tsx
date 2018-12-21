@@ -33,13 +33,13 @@ function makeAuthenticator({
   userManager,
   placeholderComponent
 }: IMakeAuthenticatorParams) {
-  return (WrappedComponent: React.ReactNode) => {
+  return <Props extends {}>(WrappedComponent: React.ReactNode) => {
     return class Authenticator extends React.Component<
-      {},
+      Props,
       IAuthenticatorState
     > {
       public userManager: UserManager
-      constructor(props: {}) {
+      constructor(props: Props) {
         super(props)
         const um = userManager
         this.userManager = um
