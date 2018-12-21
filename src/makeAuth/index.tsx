@@ -98,7 +98,9 @@ function makeAuthenticator({
           <RedirectToAuth
             userManager={this.userManager}
             onSilentSuccess={this.storeUser}
-          />
+          >
+            {placeholderComponent}
+          </RedirectToAuth>
         )
       }
     }
