@@ -95,7 +95,10 @@ function makeAuthenticator({
         return this.isValid() ? (
           <Provider value={this.state.context}>{WrappedComponent}</Provider>
         ) : (
-          <RedirectToAuth userManager={this.userManager} />
+          <RedirectToAuth
+            userManager={this.userManager}
+            onSilentSuccess={this.storeUser}
+          />
         )
       }
     }
