@@ -1,15 +1,25 @@
 import * as React from 'react'
-import { UserManager } from 'oidc-client'
+import { UserManager, User } from 'oidc-client'
 
 export interface IRedirectToAuthProps {
   userManager: UserManager
+  onSilentSuccess: (user: User) => void
 }
 class RedirectToAuth extends React.Component<IRedirectToAuthProps> {
-  public componentDidMount() {
-    this.props.userManager.signinRedirect()
+  public async componentDidMount() {
+    if (this.props.userManager.signinSilent) {
+      try {
+        const user = await this.props.userManager.signinSilent()
+        this.props.onSilentSuccess(user)
+      } catch (e) {
+        this.props.userManager.signinRedirect()
+      }
+    } else {
+      this.props.userManager.signinRedirect()
+    }
   }
-  public render(): null {
-    return null
+  public render() {
+    return this.props.children || null
   }
 }
 

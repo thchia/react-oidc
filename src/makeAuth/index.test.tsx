@@ -29,7 +29,7 @@ describe('makeAuthenticator', () => {
     getByText('Make Auth Child')
   })
 
-  it('does not render children if user is not authenticated', async () => {
+  it('does not render authed children if user is not authenticated', async () => {
     const userManagerConfig = {
       getUserFunction: expiredGetUser
     } as any
@@ -42,10 +42,9 @@ describe('makeAuthenticator', () => {
 
     await expect(expiredGetUser()).resolves.toEqual({ expired: true })
     expect(queryByText('Make Auth Child')).toBeNull()
-    expect(queryByText('Placeholder')).toBeNull()
   })
 
-  it('does not render children if there is an error retrieving user auth state', async () => {
+  it('does not render authed children if there is an error retrieving user auth state', async () => {
     const userManagerConfig = {
       getUserFunction: failedGetUser
     } as any
@@ -58,7 +57,6 @@ describe('makeAuthenticator', () => {
 
     await expect(expiredGetUser()).resolves.toEqual({ expired: true })
     expect(queryByText('Make Auth Child')).toBeNull()
-    expect(queryByText('Placeholder')).toBeNull()
   })
 
   it('renders placeholder when getting user auth state', async () => {
