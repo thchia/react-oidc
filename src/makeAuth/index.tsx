@@ -13,7 +13,7 @@ const DEFAULT_CONTEXT: IAuthenticatorContext = {
   user: null,
   userManager: null
 }
-const { Consumer, Provider } = React.createContext<IAuthenticatorContext>(
+const AuthenticatorContext = React.createContext<IAuthenticatorContext>(
   DEFAULT_CONTEXT
 )
 
@@ -93,7 +93,7 @@ function makeAuthenticator({
           return placeholderComponent || null
         }
         return this.isValid() ? (
-          <Provider value={this.state.context}>{WrappedComponent}</Provider>
+          <AuthenticatorContext.Provider value={this.state.context}>{WrappedComponent}</AuthenticatorContext.Provider>
         ) : (
           <RedirectToAuth
             userManager={this.userManager}
@@ -106,4 +106,4 @@ function makeAuthenticator({
     }
   }
 }
-export { Consumer, makeAuthenticator }
+export { AuthenticatorContext, makeAuthenticator }

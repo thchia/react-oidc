@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { fireEvent, render, waitForElement } from 'react-testing-library'
 
-import { Consumer, makeAuthenticator } from './'
+import { AuthenticatorContext, makeAuthenticator } from './'
 import makeUserManager from '../makeUserManager'
 import MockUserManager from '../utils/userManager'
 
@@ -83,7 +83,7 @@ describe('makeAuthenticator', () => {
 
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager)
-    })(<Consumer>{({ signOut }) => <Logout signOut={signOut} />}</Consumer>)
+    })(<AuthenticatorContext.Consumer>{({ signOut }) => <Logout signOut={signOut} />}</AuthenticatorContext.Consumer>)
     const { getByText, queryByText } = render(<WithAuth />)
 
     await successfulGetUser
