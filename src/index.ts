@@ -1,4 +1,4 @@
-import { Consumer as UserData, makeAuthenticator } from './makeAuth'
+import { AuthenticatorContext as UserData, makeAuthenticator } from './makeAuth'
 import makeUserManager from './makeUserManager'
 import Callback from './Callback'
 

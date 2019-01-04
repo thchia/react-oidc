@@ -97,10 +97,10 @@ The `Callback` component will call the `.signinRedirectCallback()` method from `
 
 ### `<UserData />`
 
-This component exposes the data of the authenticated user. If you are familiar with React's Context API (the official v16.3.x one), this component is just a `Consumer`.
+This component exposes the data of the authenticated user. If you are familiar with React's Context API (the official v16.3.x one), this component is just a `Context`.
 
 ```jsx
-<UserData>{context => <p>{context.user.id_token}</p>}</UserData>
+<UserData.Consumer>{context => <p>{context.user.id_token}</p>}</UserData.Consumer>
 ```
 
 Render prop function
