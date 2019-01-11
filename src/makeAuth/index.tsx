@@ -80,7 +80,11 @@ function makeAuthenticator({
 
       public signOut = () => {
         this.userManager.removeUser()
-        this.getUser()
+        this.setState(({ context }) => ({
+          context: { ...context, user: null },
+          isFetchingUser: false
+        }))
+        this.userManager.signoutRedirect()
       }
 
       public isValid = () => {
@@ -93,7 +97,9 @@ function makeAuthenticator({
           return placeholderComponent || null
         }
         return this.isValid() ? (
-          <AuthenticatorContext.Provider value={this.state.context}>{WrappedComponent}</AuthenticatorContext.Provider>
+          <AuthenticatorContext.Provider value={this.state.context}>
+            {WrappedComponent}
+          </AuthenticatorContext.Provider>
         ) : (
           <RedirectToAuth
             userManager={this.userManager}

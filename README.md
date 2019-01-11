@@ -17,7 +17,12 @@ You will need the [config](https://github.com/IdentityModel/oidc-client-js/wiki#
 Example using `react-router`
 
 ```jsx
-import { makeAuthenticator, makeUserManager, Callback } from 'react-oidc'
+import {
+  makeAuthenticator,
+  makeUserManager,
+  Callback,
+  SignoutCallback
+} from 'react-oidc'
 
 // supply this yourself
 import userManagerConfig from '../config'
@@ -39,6 +44,15 @@ export default () => (
           />
         )}
       />
+      <Route
+        path="/logout"
+        render={routeProps => (
+          <SignoutCallback
+            onSuccess={() => routeProps.history.push('/')}
+            userManager={userManager}
+          />
+        )}
+      />
       <AppWithAuth />
     </Switch>
   </Router>
@@ -47,11 +61,12 @@ export default () => (
 
 ## Slow start
 
-There are 3 main parts to this library:
+There are 4 main parts to this library:
 
 - `makeUserManager` function;
 - `makeAuthenticator` function;
-- `Callback` component
+- `Callback` component;
+- `SignoutCallback` component
 
 ### `makeUserManager(config)`
 
@@ -95,12 +110,25 @@ The lifecycle of this component is as follows:
 
 The `Callback` component will call the `.signinRedirectCallback()` method from `UserManager` and if successful, call the `onSuccess` prop. On error it will call the `onError` prop. You should pass the same instance of `UserManager` that you passed to `makeAuthenticator`.
 
+### `<SignoutCallback />`
+
+| Prop          | Type          | Required | Default Value | Description                                                                                      |
+| ------------- | ------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| `userManager` | `UserManager` | Yes      | `undefined`   | `UserManager` instance (the result of `makeUserManager()`)                                       |
+| `children`    | Component     | No       | null          | Optional component to render at the redirect page                                                |
+| `onError`     | function      | No       | `undefined`   | Optional callback if there is an error from the Promise returned by `.signoutRedirectCallback()` |
+| `onSuccess`   | function      | No       | `undefined`   | Optional callback when the Promise from `.signoutRedirectCallback()` resolves                    |
+
+The `SignoutCallback` component will call the `.signoutRedirectCallback()` method from `UserManager` and if successful, call the `onSuccess` prop. On error it will call the `onError` prop. You should pass the same instance of `UserManager` that you passed to `makeAuthenticator`.
+
 ### `<UserData />`
 
 This component exposes the data of the authenticated user. If you are familiar with React's Context API (the official v16.3.x one), this component is just a `Context`.
 
 ```jsx
-<UserData.Consumer>{context => <p>{context.user.id_token}</p>}</UserData.Consumer>
+<UserData.Consumer>
+  {context => <p>{context.user.id_token}</p>}
+</UserData.Consumer>
 ```
 
 Render prop function
@@ -117,4 +145,4 @@ This library is deliberately unopinionated about routing, however there are rest
 
 1.  **There will be url redirects**. It is highly recommended to use a routing library like `react-router` to help deal with this.
 
-2.  **The `redirect_uri` should match eagerly**. You should not render the result of `makeAuthenticator()()` at the location of the `redirect_uri`. If you do, you will end up in a redirect loop that ultimately leads you back to the authentication page. In the quick start above, a `Switch` from `react-router` is used, and the `Callback` component is placed _before_ `AppWithAuth`. This ensures that when the user is redirected to the `redirect_uri`, `AppWithAuth` is not rendered. Once the user data has been loaded into storage, `onSuccess` is called and the user is redirected back to a protected route. When `AppWithAuth` loads now, the valid user session is in storage and the protected routes are rendered.
+2.  **The `redirect_uri` should match eagerly (for both login and logout)**. You should not render the result of `makeAuthenticator()()` at the location of the `redirect_uri`. If you do, you will end up in a redirect loop that ultimately leads you back to the authentication page. In the quick start above, a `Switch` from `react-router` is used, and the `Callback` component is placed _before_ `AppWithAuth`. This ensures that when the user is redirected to the `redirect_uri`, `AppWithAuth` is not rendered. Once the user data has been loaded into storage, `onSuccess` is called and the user is redirected back to a protected route. When `AppWithAuth` loads now, the valid user session is in storage and the protected routes are rendered.

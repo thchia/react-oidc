@@ -1,67 +1,58 @@
 import * as React from 'react'
-import { render } from 'react-testing-library'
+import { render, wait } from 'react-testing-library'
 
 import Callback from './'
-import MockUserManager from '../utils/userManager'
-import makeUserManager from '../makeUserManager'
 
-const USER_MANAGER_CONFIG = {} as any
+const makeMockedPromise = (params?: {
+  result?: 'resolve' | 'reject'
+  payload?: any
+}) => {
+  if (!params)
+    params = {
+      result: 'resolve',
+      payload: undefined
+    }
+  if (params.result === 'resolve') {
+    return jest.fn(() => Promise.resolve(params.payload))
+  } else {
+    return jest.fn(() => Promise.reject(params.payload))
+  }
+}
 
 describe('Callback component', () => {
-  it('calls onSuccess', async () => {
-    const signinPromise = () => new Promise(res => res('mockUser'))
+  it('calls onSuccess', () => {
     const onSuccess = jest.fn()
 
     render(
       <Callback
-        userManager={makeUserManager(
-          {
-            ...USER_MANAGER_CONFIG,
-            signinRedirectCallback: signinPromise
-          },
-          MockUserManager
-        )}
+        redirectCallback={makeMockedPromise({ payload: 'mockUser' })}
         onSuccess={onSuccess}
       >
         <div />
       </Callback>
     )
 
-    await signinPromise
-    expect(onSuccess).toHaveBeenCalledWith('mockUser')
+    wait(() => expect(onSuccess).toHaveBeenCalledWith('mockUser'))
   })
 
-  it('calls on Error', async () => {
-    const signinPromise = () => new Promise((res, rej) => rej('Test Error'))
+  it('calls on Error', () => {
     const onError = jest.fn()
 
     render(
       <Callback
-        userManager={makeUserManager(
-          {
-            ...USER_MANAGER_CONFIG,
-            signinRedirectCallback: signinPromise
-          },
-          MockUserManager
-        )}
+        redirectCallback={makeMockedPromise({ payload: 'Test Error' })}
         onError={onError}
       >
         <div />
       </Callback>
     )
 
-    try {
-      await signinPromise
-    } catch (e) {
-      expect(onError).toHaveBeenCalledWith('Test Error')
-    }
+    wait(() => expect(onError).toHaveBeenCalledWith('Test Error'))
   })
 
   it('renders children', () => {
     const { getByText } = render(
-      <Callback
-        userManager={makeUserManager(USER_MANAGER_CONFIG, MockUserManager)}
-      >
+      <Callback redirectCallback={makeMockedPromise()}>
         <div>Test Child</div>
       </Callback>
     )
@@ -70,10 +61,6 @@ describe('Callback component', () => {
   })
 
   it('works without children', () => {
-    render(
-      <Callback
-        userManager={makeUserManager(USER_MANAGER_CONFIG, MockUserManager)}
-      />
-    )
+    render(<Callback redirectCallback={makeMockedPromise()} />)
   })
 })
