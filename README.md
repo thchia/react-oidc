@@ -24,7 +24,12 @@ import userManagerConfig from '../config'
 
 const userManager = makeUserManager(userManagerConfig)
 const AppWithAuth = makeAuthenticator({
-  userManager
+  userManager: userManager,
+  signinArgs: {
+    state: {
+      foo: 15
+    }
+  }
 })(<App />)
 
 export default () => (
@@ -34,7 +39,10 @@ export default () => (
         path="/callback"
         render={routeProps => (
           <Callback
-            onSuccess={() => routeProps.history.push('/')}
+            onSuccess={(user) => {
+              // `user.state` will reflect the state that was passed in via signinArgs.
+              routeProps.history.push('/')
+            }}
             userManager={userManager}
           />
         )}
