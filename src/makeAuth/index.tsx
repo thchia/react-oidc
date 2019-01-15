@@ -28,10 +28,12 @@ export interface IAuthenticatorState {
 export interface IMakeAuthenticatorParams {
   placeholderComponent?: React.ReactNode
   userManager?: UserManager
+  signinArgs?: any
 }
 function makeAuthenticator({
   userManager,
-  placeholderComponent
+  placeholderComponent,
+  signinArgs
 }: IMakeAuthenticatorParams) {
   return <Props extends {}>(WrappedComponent: React.ReactNode) => {
     return class Authenticator extends React.Component<
@@ -39,10 +41,12 @@ function makeAuthenticator({
       IAuthenticatorState
     > {
       public userManager: UserManager
+      public signinArgs: any
       constructor(props: Props) {
         super(props)
         const um = userManager
         this.userManager = um
+        this.signinArgs = signinArgs
         this.state = {
           context: {
             signOut: this.signOut,
@@ -98,6 +102,7 @@ function makeAuthenticator({
           <RedirectToAuth
             userManager={this.userManager}
             onSilentSuccess={this.storeUser}
+            signinArgs={this.signinArgs}
           >
             {placeholderComponent}
           </RedirectToAuth>
