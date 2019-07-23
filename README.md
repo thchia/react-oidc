@@ -20,6 +20,7 @@ Example using `react-router`
 import { makeAuthenticator, makeUserManager, Callback } from 'react-oidc'
 
 // supply this yourself
+import App from '../layouts/App'
 import userManagerConfig from '../config'
 
 const userManager = makeUserManager(userManagerConfig)
@@ -30,7 +31,7 @@ const AppWithAuth = makeAuthenticator({
       foo: 15
     }
   }
-})(<App />)
+})(App)
 
 export default () => (
   <Router>
