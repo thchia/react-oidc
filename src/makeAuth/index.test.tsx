@@ -83,11 +83,15 @@ describe('makeAuthenticator', () => {
 
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager)
-    })(<AuthenticatorContext.Consumer>{({ signOut }) => <Logout signOut={signOut} />}</AuthenticatorContext.Consumer>)
+    })(
+      <AuthenticatorContext.Consumer>
+        {({ signOut }) => <Logout signOut={signOut} />}
+      </AuthenticatorContext.Consumer>
+    )
     const { getByText, queryByText } = render(<WithAuth />)
 
     await successfulGetUser
-    const button = getByText('Logout')
+    const button = getByText('Logout') as HTMLElement
 
     fireEvent.click(button)
     waitForElement(() => expect(queryByText('Logout')).toBeNull())

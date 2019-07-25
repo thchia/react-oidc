@@ -8,7 +8,7 @@ describe('RedirectToAuth', () => {
   it('calls signinRedirect', () => {
     const mock = jest.fn()
     const um = new MockUserManager({ signinRedirectFunction: mock })
-    render(<RedirectToAuth userManager={um} />)
+    render(<RedirectToAuth userManager={um} onSilentSuccess={jest.fn()} />)
 
     wait(() => expect(mock).toHaveBeenCalledTimes(1))
   })
