@@ -2,8 +2,6 @@
 
 Wrapper for [oidc-client-js](https://github.com/IdentityModel/oidc-client-js), to be used in React apps.
 
-**This is an alpha version**
-
 ## Quick start
 
 > You should read the [slow start](https://github.com/thchia/react-oidc#slow-start) and [Routing Considerations](https://github.com/thchia/react-oidc#routing-considerations) too
@@ -40,7 +38,7 @@ export default () => (
         path="/callback"
         render={routeProps => (
           <Callback
-            onSuccess={(user) => {
+            onSuccess={user => {
               // `user.state` will reflect the state that was passed in via signinArgs.
               routeProps.history.push('/')
             }}
@@ -109,7 +107,9 @@ The `Callback` component will call the `.signinRedirectCallback()` method from `
 This component exposes the data of the authenticated user. If you are familiar with React's Context API (the official v16.3.x one), this component is just a `Context`.
 
 ```jsx
-<UserData.Consumer>{context => <p>{context.user.id_token}</p>}</UserData.Consumer>
+<UserData.Consumer>
+  {context => <p>{context.user.id_token}</p>}
+</UserData.Consumer>
 ```
 
 Render prop function
