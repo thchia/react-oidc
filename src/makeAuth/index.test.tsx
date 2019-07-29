@@ -7,6 +7,7 @@ import MockUserManager from '../utils/userManager'
 
 describe('makeAuthenticator', () => {
   const Child = () => <div>Make Auth Child</div>
+  const ChildProps = ({foo}) => <div>{foo}</div>
   const Placeholder = () => <div>Placeholder</div>
   const Logout = (props: { signOut: () => void }) => (
     <button onClick={props.signOut}>Logout</button>
@@ -22,7 +23,7 @@ describe('makeAuthenticator', () => {
 
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager)
-    })(<Child />)
+    })(Child)
     const { getByText } = render(<WithAuth />)
 
     await successfulGetUser
@@ -37,7 +38,7 @@ describe('makeAuthenticator', () => {
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager),
       placeholderComponent: <Placeholder />
-    })(<Child />)
+    })(Child)
     const { queryByText } = render(<WithAuth />)
 
     await expect(expiredGetUser()).resolves.toEqual({ expired: true })
@@ -52,7 +53,7 @@ describe('makeAuthenticator', () => {
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager),
       placeholderComponent: <Placeholder />
-    })(<Child />)
+    })(Child)
     const { queryByText } = render(<WithAuth />)
 
     await expect(expiredGetUser()).resolves.toEqual({ expired: true })
@@ -67,7 +68,7 @@ describe('makeAuthenticator', () => {
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager),
       placeholderComponent: <Placeholder />
-    })(<Child />)
+    })(Child)
     const { getByText, queryByText } = render(<WithAuth />)
 
     getByText('Placeholder')
@@ -81,9 +82,10 @@ describe('makeAuthenticator', () => {
       getUserFunction: successfulGetUser
     } as any
 
+    const SignOut = () => (<AuthenticatorContext.Consumer>{({ signOut }) => <Logout signOut={signOut} />}</AuthenticatorContext.Consumer>);
     const WithAuth = makeAuthenticator({
       userManager: makeUserManager(userManagerConfig, MockUserManager)
-    })(<AuthenticatorContext.Consumer>{({ signOut }) => <Logout signOut={signOut} />}</AuthenticatorContext.Consumer>)
+    })(SignOut)
     const { getByText, queryByText } = render(<WithAuth />)
 
     await successfulGetUser
@@ -91,5 +93,20 @@ describe('makeAuthenticator', () => {
 
     fireEvent.click(button)
     waitForElement(() => expect(queryByText('Logout')).toBeNull())
+  })
+  
+  it('has props passed through', async () => {
+    const userManagerConfig = {
+      getUserFunction: successfulGetUser
+    } as any
+
+    const WithAuth = makeAuthenticator({
+      userManager: makeUserManager(userManagerConfig, MockUserManager),
+      placeholderComponent: <Placeholder />
+    })(ChildProps)
+    const { getByText } = render(<WithAuth foo="bar" />)
+
+    await successfulGetUser
+    getByText('bar')
   })
 })

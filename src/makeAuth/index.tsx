@@ -35,7 +35,7 @@ function makeAuthenticator({
   placeholderComponent,
   signinArgs
 }: IMakeAuthenticatorParams) {
-  return <Props extends {}>(WrappedComponent: React.ReactNode) => {
+  return <Props extends {}>(WrappedComponent: React.ComponentType<Props>) => {
     return class Authenticator extends React.Component<
       Props,
       IAuthenticatorState
@@ -97,7 +97,9 @@ function makeAuthenticator({
           return placeholderComponent || null
         }
         return this.isValid() ? (
-          <AuthenticatorContext.Provider value={this.state.context}>{WrappedComponent}</AuthenticatorContext.Provider>
+          <AuthenticatorContext.Provider value={this.state.context}>
+            <WrappedComponent {...this.props} />
+          </AuthenticatorContext.Provider>
         ) : (
           <RedirectToAuth
             userManager={this.userManager}
