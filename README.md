@@ -70,10 +70,11 @@ Helper utility to create a `UserManager` instance.
 
 ### `makeAuthenticator(params)(<ProtectedApp />)`
 
-| Param                  | Type          | Required | Default Value | Description                                                      |
-| ---------------------- | ------------- | -------- | ------------- | ---------------------------------------------------------------- |
-| `userManager`          | `UserManager` | Yes      | `undefined`   | `UserManager` instance (the result of `makeUserManager()`)       |
-| `placeholderComponent` | Component     | No       | `null`        | Optional component to render while auth state is being retrieved |
+| Param                  | Type          | Required | Default Value | Description                                                                                           |
+| ---------------------- | ------------- | -------- | ------------- | ----------------------------------------------------------------------------------------------------- |
+| `userManager`          | `UserManager` | Yes      | `undefined`   | `UserManager` instance (the result of `makeUserManager()`)                                            |
+| `placeholderComponent` | Component     | No       | `null`        | Optional component to render while auth state is being retrieved                                      |
+| `signinRedirect`       | boolean       | No       | `false`       | Determines if oidc should use `signinRedirect`/`signoutRedirect` by default instead of `signinSilent` |
 
 This is a higher-order function that accepts a `UserManager` instance, and optionally a placeholder component to render when user auth state is being retrieved. It returns a function that accepts a React component. This component should contain all components that you want to be protected by your authentication. Ultimately you will get back a component that either renders the component you passed it (if the user is authenticated), or redirects to the OIDC login screen as defined by the Identity Provider.
 

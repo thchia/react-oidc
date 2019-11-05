@@ -4,11 +4,12 @@ import { UserManager, User } from 'oidc-client'
 export interface IRedirectToAuthProps {
   userManager: UserManager
   onSilentSuccess: (user: User) => void
-  signinArgs?: any
+  signinArgs?: any,
+  signinRedirect?: boolean,
 }
 class RedirectToAuth extends React.Component<IRedirectToAuthProps> {
   public async componentDidMount() {
-    if (this.props.userManager.signinSilent) {
+    if (!this.props.signinRedirect && this.props.userManager.signinSilent) {
       try {
         const user = await this.props.userManager.signinSilent(this.props.signinArgs)
         this.props.onSilentSuccess(user)
