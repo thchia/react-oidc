@@ -8,19 +8,31 @@ export interface IRedirectToAuthProps {
 }
 class RedirectToAuth extends React.Component<IRedirectToAuthProps> {
   public async componentDidMount() {
-    if (this.props.userManager.signinSilent) {
-      try {
-        const user = await this.props.userManager.signinSilent(this.props.signinArgs)
-        this.props.onSilentSuccess(user)
-      } catch (e) {
-        this.props.userManager.signinRedirect(this.props.signinArgs)
-      }
+    const user = await this.props.userManager.getUser();
+    const requiresSignIn = !user || user.expired;
+
+    if (requiresSignIn) {
+      this.redirectToSignIn();
     } else {
-      this.props.userManager.signinRedirect(this.props.signinArgs)
+      await this.silentlySignIn();
     }
   }
+
   public render() {
     return this.props.children || null
+  }
+
+  private redirectToSignIn() {
+    this.props.userManager.signinRedirect(this.props.signinArgs);
+  }
+
+  private async silentlySignIn(){
+    try {
+      const user = await this.props.userManager.signinSilent(this.props.signinArgs);
+      this.props.onSilentSuccess(user);
+    } catch (e) {
+      this.props.userManager.signinRedirect(this.props.signinArgs);
+    }
   }
 }
 
