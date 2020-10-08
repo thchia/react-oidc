@@ -83,9 +83,10 @@ function makeAuthenticator({
       }
 
       public signOut = () => {
-        this.userManager.removeUser()
-        this.getUser()
-      }
+        this.userManager.removeUser();
+        this.userManager.signoutRedirect();
+        this.getUser();
+      };
 
       public isValid = () => {
         const { user } = this.state.context
